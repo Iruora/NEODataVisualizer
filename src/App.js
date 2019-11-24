@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import NearObjectsChart from './components/nearObjectsChart';
+import NearObjects from './components/nearObjects';
 
 function App() {
   return (
     <React.Fragment>
-      <NearObjectsChart></NearObjectsChart>
+      <NearObjects></NearObjects>
     </React.Fragment>
   );
 }
