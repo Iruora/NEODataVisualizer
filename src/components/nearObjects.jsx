@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NearObjectsChart from './nearObjectsChart';
 import DataFilter from './dataFilter';
+import DataTable from './dataTable';
 import axios from 'axios';
 import { from } from 'rxjs';
 class NearObjects extends Component {
@@ -8,11 +9,16 @@ class NearObjects extends Component {
     state = { 
         nearObjects: [], // Contains NEO got from API
         visuData : [], // Contains visualization data
-        selectedOrbitingObj : '',
-        gotData: true
+        selectedOrbitingObj : '', // to be showed as indicator to user
+        gotData: true, // true whether we've got data after filtering
+        toggle: true // true shows chart otherwise shows table
     }
     m = "estimated_diameter_m"; // to minimize attribute length
     headers = ['NEO Name', 'min', 'max']; // Chart headers
+    // ----------------------------------Toggles toggle state-------------------------------
+    toggle() {
+        this.setState({toggle: !this.state.toggle});
+    }
     // ------------average(a, b)- Calculates a and b average-------------
     average(a, b) {
         return (a + b) / 2;
@@ -115,7 +121,9 @@ class NearObjects extends Component {
         this.setState({selectedOrbitingObj: filterBy});
         const {nearObjects} = this.state; // get near objects from state
         let filtered = this.getWithCloseApproachData(nearObjects);
-        const finals = this.getCloseApproachDataByOrbitingBody(filterBy, filtered);
+        const finals = Array.from(
+            new Set(this.getCloseApproachDataByOrbitingBody(filterBy, filtered))
+        );
         if (finals.length !== 0) { // if we got elements in return we display
             this.setState(
                 {
@@ -145,12 +153,18 @@ class NearObjects extends Component {
                         this.state.selectedOrbitingObj
                     }>
                 </DataFilter>
+                <button className="btn btn-primary" onClick={() => this.toggle()}>
+                    {`${this.state.toggle ? 'table' : 'chart'}`}
+                </button>
                 {
                     this.state.gotData ? 
-                    <NearObjectsChart 
-                        visuData={this.state.visuData} 
-                    >
-                    </NearObjectsChart> :
+                    (this.state.toggle ? 
+                        <NearObjectsChart 
+                            visuData={this.state.visuData} 
+                        >
+                        </NearObjectsChart> : 
+                        <DataTable visuData={this.state.visuData}></DataTable>
+                    ) :
                     <span className="alert alert-danger">No data to show</span>
                 }
             </React.Fragment>
