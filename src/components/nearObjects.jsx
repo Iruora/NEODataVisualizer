@@ -9,13 +9,13 @@ class NearObjects extends Component {
     state = { 
         nearObjects: [], // Contains NEO got from API
         visuData : [], // Contains visualization data
-        selectedOrbitingObj : '',
-        gotData: true,
-        toggle: true
+        selectedOrbitingObj : '', // to be showed as indicator to user
+        gotData: true, // true whether we've got data after filtering
+        toggle: true // true shows chart otherwise shows table
     }
     m = "estimated_diameter_m"; // to minimize attribute length
     headers = ['NEO Name', 'min', 'max']; // Chart headers
-    // -----------------------------------------------------------------
+    // ----------------------------------Toggles toggle state-------------------------------
     toggle() {
         this.setState({toggle: !this.state.toggle});
     }

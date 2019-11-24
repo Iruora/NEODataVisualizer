@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+/*
+    Nidhal AROURI
+    25/11/2019
+*/
+// ------ Table for data visualization
 class DataTable extends Component {
-    index = 0;
-    mapToTable(array) {
-        const data = array;
-        data.shift();
-        return data;
-    }
+    index = 0; // attrubute to refer rows index
     render() { 
         this.index = 0;
         return ( 
