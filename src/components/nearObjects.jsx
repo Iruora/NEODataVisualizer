@@ -7,7 +7,9 @@ class NearObjects extends Component {
     // ----------State--------------
     state = { 
         nearObjects: [], // Contains NEO got from API
-        visuData : [] // Contains visualization data
+        visuData : [], // Contains visualization data
+        selectedOrbitingObj : '',
+        gotData: true
     }
     m = "estimated_diameter_m"; // to minimize attribute length
     headers = ['NEO Name', 'min', 'max']; // Chart headers
@@ -83,15 +85,74 @@ class NearObjects extends Component {
                 }
             );
     }
-    
+    // ------------Get only elements with non-empty close approach data------------------
+    getWithCloseApproachData(neoArray) {
+        return neoArray.filter(
+            e => e.close_approach_data.length > 0
+        );
+    }
+    // ------------Filter by orbiting body from data-------------------
+    getCloseApproachDataByOrbitingBody(orbitingBody, from) {
+        let result = [];
+        from.forEach(
+            e => {
+                // console.warn(`orbbody`, e.close_approach_data);
+                e.close_approach_data
+                .forEach(
+                    elt => {
+                        if (elt.orbiting_body === orbitingBody) {
+                            result.push(e);
+                        }
+                    }
+                );
+            }
+        );
+        return result;
+    }
+    // ------------------------------
+    // ------Handle filtering event------------------------
+    handelFilter(filterBy) {
+        this.setState({selectedOrbitingObj: filterBy});
+        const {nearObjects} = this.state; // get near objects from state
+        let filtered = this.getWithCloseApproachData(nearObjects);
+        const finals = this.getCloseApproachDataByOrbitingBody(filterBy, filtered);
+        if (finals.length !== 0) { // if we got elements in return we display
+            this.setState(
+                {
+                    visuData: [
+                        this.headers, 
+                        ...this.mapNearObjectToVisu(finals)
+                    ],
+                    gotData: true
+                }
+            );
+        } else { // if no elements we return empty data to throm Chart no column error
+            this.setState(
+                {
+                    gotData: false
+                }
+            );
+        }
+    }
     render() {
         return (
             <React.Fragment>
-                <DataFilter></DataFilter>
-                <NearObjectsChart 
-                    visuData={this.state.visuData} 
-                >
-                </NearObjectsChart>
+                <DataFilter 
+                    onFilter={
+                        (e) => this.handelFilter(e)
+                    } 
+                    selectedOrbitingObj={
+                        this.state.selectedOrbitingObj
+                    }>
+                </DataFilter>
+                {
+                    this.state.gotData ? 
+                    <NearObjectsChart 
+                        visuData={this.state.visuData} 
+                    >
+                    </NearObjectsChart> :
+                    <span className="alert alert-danger">No data to show</span>
+                }
             </React.Fragment>
         );
     }
