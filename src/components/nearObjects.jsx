@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NearObjectsChart from './nearObjectsChart';
 import DataFilter from './dataFilter';
+import DataTable from './dataTable';
 import axios from 'axios';
 import { from } from 'rxjs';
 class NearObjects extends Component {
@@ -115,7 +116,9 @@ class NearObjects extends Component {
         this.setState({selectedOrbitingObj: filterBy});
         const {nearObjects} = this.state; // get near objects from state
         let filtered = this.getWithCloseApproachData(nearObjects);
-        const finals = this.getCloseApproachDataByOrbitingBody(filterBy, filtered);
+        const finals = Array.from(
+            new Set(this.getCloseApproachDataByOrbitingBody(filterBy, filtered))
+        );
         if (finals.length !== 0) { // if we got elements in return we display
             this.setState(
                 {
@@ -153,6 +156,7 @@ class NearObjects extends Component {
                     </NearObjectsChart> :
                     <span className="alert alert-danger">No data to show</span>
                 }
+                <DataTable visuData={this.state.visuData}></DataTable>
             </React.Fragment>
         );
     }
