@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
+import Chart from 'react-google-charts';
 import { from } from 'rxjs';
 import axios from 'axios';
 class NearObjectsChart extends Component {
     state = { 
-        nearObjects: []
+        nearObjects: [],
+        visuData : []
     }
     m = "estimated_diameter_m";
     headers = ['NEO Name', 'min', 'max'];
     average(a, b) {
         return (a + b) / 2;
     }
-
+    mapNearObjectToVisu(nearObjects) {
+        
+        return nearObjects.map(
+            e => {
+                return [
+                    e.name,
+                    e.estimated_diameter.kilometers.estimated_diameter_min,
+                    e.estimated_diameter.kilometers.estimated_diameter_max
+                ];
+            }
+        );
+    }
     componentDidMount() {
         from(axios.get('https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=DEMO_KEY'))
             .subscribe(
@@ -29,6 +42,14 @@ class NearObjectsChart extends Component {
                         )
                     );
                     this.setState({nearObjects: nearObjects});
+                    this.setState(
+                        {
+                            visuData: [
+                                this.headers, 
+                                ...this.mapNearObjectToVisu(this.state.nearObjects)
+                            ]
+                        }
+                    );
                 },
                 error => {
                     return console.error(error);
@@ -40,13 +61,28 @@ class NearObjectsChart extends Component {
         console.log(this);
         return ( 
             <React.Fragment>
-                <ul>
-                    {
-                      this.state.nearObjects.map(
-                          e => <li key={e.id}>{e.name}</li>
-                      )  
+                <Chart
+                    width={'800px'}
+                    height={'800px'}
+                    chartType="BarChart"
+                    loader={<div>Loading Chart</div>}
+                    data={
+                        this.state.visuData
                     }
-                </ul>
+                    options={{
+                    title: 'NASA NEO',
+                    chartArea: { width: '70%' },
+                    hAxis: {
+                        title: 'Min Estimated diameter (km)',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'NEO Name',
+                    },
+                    }}
+                    // For tests
+                    rootProps={{ 'data-testid': '1' }}
+                />
             </React.Fragment>
         );
     }
