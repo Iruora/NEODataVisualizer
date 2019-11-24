@@ -10,10 +10,15 @@ class NearObjects extends Component {
         nearObjects: [], // Contains NEO got from API
         visuData : [], // Contains visualization data
         selectedOrbitingObj : '',
-        gotData: true
+        gotData: true,
+        toggle: true
     }
     m = "estimated_diameter_m"; // to minimize attribute length
     headers = ['NEO Name', 'min', 'max']; // Chart headers
+    // -----------------------------------------------------------------
+    toggle() {
+        this.setState({toggle: !this.state.toggle});
+    }
     // ------------average(a, b)- Calculates a and b average-------------
     average(a, b) {
         return (a + b) / 2;
@@ -148,15 +153,20 @@ class NearObjects extends Component {
                         this.state.selectedOrbitingObj
                     }>
                 </DataFilter>
+                <button className="btn btn-primary" onClick={() => this.toggle()}>
+                    {`${this.state.toggle ? 'table' : 'chart'}`}
+                </button>
                 {
                     this.state.gotData ? 
-                    <NearObjectsChart 
-                        visuData={this.state.visuData} 
-                    >
-                    </NearObjectsChart> :
+                    (this.state.toggle ? 
+                        <NearObjectsChart 
+                            visuData={this.state.visuData} 
+                        >
+                        </NearObjectsChart> : 
+                        <DataTable visuData={this.state.visuData}></DataTable>
+                    ) :
                     <span className="alert alert-danger">No data to show</span>
                 }
-                <DataTable visuData={this.state.visuData}></DataTable>
             </React.Fragment>
         );
     }
