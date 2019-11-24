@@ -1,8 +1,20 @@
+## This projects handels data visualization of Near objects using [NASA NEO API](https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=DEMO_KEY)
+__________________________________________________________________________________________________
+A special thanks to **Botify** giving me the chance to discove this NASA API and go through it
+__________________________________________________________________________________________________
+### `npm instal`
+Run this command to install all project dependencies
+
+### `npm start`
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+__________________________________________________________________________________________________
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can also run:
 
 ### `npm start`
 
