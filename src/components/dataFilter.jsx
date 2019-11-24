@@ -5,17 +5,31 @@ import React, { Component } from 'react';
 */
 // ------- Data Filter
 class DataFilter extends Component {
-    state = {  }
+    capitalizeFLetter(str) {    
+        return str.charAt(0).toUpperCase() + 
+         str.slice(1); 
+    } 
     render() { 
         return (
             <React.Fragment>
                 <div className="form-group">
+                    <input 
+                        type="text" 
+                        className="form-control"
+                        placeholder="search" 
+                        onKeyUp={
+                            (event) => this.props.onFilter(
+                                this.capitalizeFLetter(event.target.value)
+                            )
+                        }/>
                     <label htmlFor="exampleFormControlSelect1">Select orbiting object</label>
                     <select 
                         className="form-control" 
                         id="exampleFormControlSelect1"
                         defaultValue = "Select"
-                        onChange={(event) => this.props.onFilter(event.target.value)}
+                        onChange={(event) => this.props.onFilter(
+                            this.capitalizeFLetter(event.target.value)
+                        )}
                     >
                         <option disabled>Select</option>
                         <option>Mercury</option>
