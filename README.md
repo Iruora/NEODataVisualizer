@@ -1,6 +1,5 @@
 ## This projects handels data visualization of Near objects using [NASA NEO API](https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=DEMO_KEY)
-__________________________________________________________________________________________________
-A special thanks to **Botify** giving me the chance to discove this NASA API and go through it
+
 __________________________________________________________________________________________________
 ### `npm instal`
 Run this command to install all project dependencies
